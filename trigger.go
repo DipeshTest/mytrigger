@@ -3,8 +3,10 @@ package mytrigger
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"time"
 
+	"github.com/ChimeraCoder/anaconda"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
 )
@@ -58,6 +60,22 @@ func (t *MqttTrigger) Start() error {
 		topic := handler.GetStringSetting("topic")
 
 		//	t.RunHandler(handler, "test1")
+
+		anaconda.SetConsumerKey("BWSpdB3hoSTv2YTui0hx1rY9Q")
+		anaconda.SetConsumerSecret("wFCsXWw8K1eUOG7zwAu0RmGTm74zEGxsp5T3Ss4htRxYbI8VMP")
+		api := anaconda.NewTwitterApi("990618908427108355-fUnlckZLtsRVDuy9XGDRkYYlokaD8DB", "Jz186PFXQv6sOg1sYhHYqqX6WDXLLFHIFwHFnu5xM4bXK")
+
+		stream := api.PublicStreamFilter(url.Values{
+			"track": []string{topic},
+		})
+
+		defer stream.Stop()
+
+		for v := range stream.C {
+			twt, _ := v.(anaconda.Tweet)
+			log.Info("Received Tweet", string(twt.Id))
+			t.RunHandler(handler, (twt.Text))
+		}
 
 		ticker := time.NewTicker(60 * time.Second)
 		go func() {
