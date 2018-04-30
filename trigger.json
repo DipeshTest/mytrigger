@@ -1,9 +1,9 @@
 {
-  "name": "flogo-mqtt",
+  "name": "test-mqtt",
   "type": "flogo:trigger",
   "ref": "github.com/DipeshTest/mytrigger",
   "version": "0.0.1",
-  "title": "Receive MQTT Message",
+  "title": "test trigger",
   "author": "Michael Register <mregiste@tibco.com>",
   "description": "Simple MQTT Trigger",
   "settings":[
