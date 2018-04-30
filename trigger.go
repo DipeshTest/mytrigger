@@ -2,9 +2,7 @@ package mytrigger
 
 import (
 	"context"
-	"fmt"
 	"net/url"
-	"time"
 
 	"github.com/ChimeraCoder/anaconda"
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
@@ -77,15 +75,15 @@ func (t *MqttTrigger) Start() error {
 			t.RunHandler(handler, (twt.Text))
 		}
 
-		ticker := time.NewTicker(60 * time.Second)
-		go func() {
-			for te := range ticker.C {
-				s := time.Now().String()
-				fmt.Println(te.Hour())
-				t.RunHandler(handler, s)
-			}
+		// ticker := time.NewTicker(60 * time.Second)
+		// go func() {
+		// 	for te := range ticker.C {
+		// 		s := time.Now().String()
+		// 		fmt.Println(te.Hour())
+		// 		t.RunHandler(handler, s)
+		// 	}
 
-		}()
+		//	}()
 
 		log.Debugf("topic: [%s]", topic)
 
