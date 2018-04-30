@@ -51,6 +51,8 @@ func (t *MqttTrigger) Start() error {
 
 	t.topicToHandler = make(map[string]*trigger.Handler)
 
+	log.Info("Start called")
+
 	for _, handler := range t.handlers {
 
 		topic := handler.GetStringSetting("topic")
@@ -85,7 +87,7 @@ func (t *MqttTrigger) Stop() error {
 func (t *MqttTrigger) RunHandler(handler *trigger.Handler, payload string) {
 
 	trgData := make(map[string]interface{})
-	trgData["message"] = "test"
+	trgData["message"] = payload
 
 	results, err := handler.Handle(context.Background(), trgData)
 
