@@ -2,6 +2,8 @@ package mytrigger
 
 import (
 	"context"
+	"fmt"
+	"time"
 
 	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 	"github.com/TIBCOSoftware/flogo-lib/logger"
@@ -54,7 +56,17 @@ func (t *MqttTrigger) Start() error {
 		topic := handler.GetStringSetting("topic")
 
 		//	t.RunHandler(handler, "test1")
-		t.RunHandler(handler, "test1")
+
+		ticker := time.NewTicker(60 * time.Second)
+		go func() {
+			for te := range ticker.C {
+				s := time.Now().String()
+				fmt.Println(te.Hour())
+				t.RunHandler(handler, s)
+			}
+
+		}()
+
 		log.Debugf("topic: [%s]", topic)
 
 	}
