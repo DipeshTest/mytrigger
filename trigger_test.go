@@ -1,13 +1,9 @@
 package mytrigger
 
 import (
-	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"testing"
-
 	//MQTT "github.com/eclipse/paho.mqtt.golang"
-	"github.com/TIBCOSoftware/flogo-lib/core/trigger"
 )
 
 var jsonTestMetadata = getTestJsonMetadata()
@@ -23,9 +19,9 @@ func getTestJsonMetadata() string {
 const testConfig string = `{
   "name": "flogo-mqtt",
   "settings": {
-    "topic": "flogo/#",
-    "broker": "tcp://127.0.0.1:1883",
-    "id": "flogoEngine",
+    "apikey": "flogo/#",
+    "consumerKey": "tcp://127.0.0.1:1883",
+    "consumerSecret": "flogoEngine",
     "user": "",
     "password": "",
     "store": "",
@@ -36,7 +32,7 @@ const testConfig string = `{
     {
       "actionId": "device_info",
       "settings": {
-        "topic": "test_start"
+        "searchString": "test_start"
       }
     }
   ]
@@ -59,16 +55,16 @@ const testConfig string = `{
 func TestInit(t *testing.T) {
 
 	// New  factory
-	md := trigger.NewMetadata(jsonTestMetadata)
-	f := NewFactory(md)
-
-	// New Trigger
-	config := trigger.Config{}
-	json.Unmarshal([]byte(testConfig), &config)
-	fmt.Println(config)
-	tgr := f.New(&config)
-
-	tgr.Start()
+	// md := trigger.NewMetadata(jsonTestMetadata)
+	// f := NewFactory(md)
+	//
+	// // New Trigger
+	// config := trigger.Config{}
+	// json.Unmarshal([]byte(testConfig), &config)
+	// fmt.Println(config)
+	// tgr := f.New(&config)
+	//
+	// tgr.Start()
 
 	//runner := &TestRunner{}
 
