@@ -1,9 +1,9 @@
 {
-  "name": "twitter-listner",
+  "name": "twitter-listener",
   "type": "flogo:trigger",
   "ref": "github.com/DipeshTest/mytrigger",
   "version": "0.0.1",
-  "title": "Twitter Stream Listner",
+  "title": "Twitter Stream Listener",
   "author": "AllStars",
   "description": "Simple Twitter Stream Listner",
   "settings":[
@@ -16,11 +16,11 @@
       "type": "string"
     },
     {
-      "name": "consumerKey",
+      "name": "accessToken",
       "type": "string"
     },
     {
-      "name": "consumerSecret",
+      "name": "accessTokenSecret",
       "type": "string"
     }
 

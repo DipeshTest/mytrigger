@@ -2,6 +2,7 @@ package mytrigger
 
 import (
 	"context"
+	"errors"
 	"net/url"
 	"strings"
 
@@ -13,7 +14,7 @@ import (
 // log is the default package logger
 var log = logger.GetLogger("trigger-twitter-listner")
 
-// TwitterTrigger is simple MQTT trigger
+// TwitterTrigger is simple  trigger
 type TwitterTrigger struct {
 	metadata       *trigger.Metadata
 	config         *trigger.Config
@@ -26,7 +27,7 @@ func NewFactory(md *trigger.Metadata) trigger.Factory {
 	return &TwitterFactory{metadata: md}
 }
 
-// TwitterFactory MQTT Trigger factory
+// TwitterFactory  Trigger factory
 type TwitterFactory struct {
 	metadata *trigger.Metadata
 }
@@ -54,26 +55,30 @@ func (t *TwitterTrigger) Start() error {
 
 	apiKey := strings.TrimSpace(t.config.GetSetting("apiKey"))
 	apiSecret := strings.TrimSpace(t.config.GetSetting("apiSecret"))
-	consumerKey := strings.TrimSpace(t.config.GetSetting("consumerKey"))
-	consumerSecret := strings.TrimSpace(t.config.GetSetting("consumerSecret"))
+	accessToken := strings.TrimSpace(t.config.GetSetting("accessToken"))
+	accessTokenSecret := strings.TrimSpace(t.config.GetSetting("accessTokenSecret"))
 	searchString := strings.TrimSpace(t.handlers[0].GetStringSetting("searchString"))
-	if len(apiKey) == 0 || len(apiSecret) == 0 || len(consumerKey) == 0 || len(consumerSecret) == 0 || len(searchString) == 0 {
+
+	//	log.Info("Twitter Started")
+
+	if len(apiKey) == 0 || len(apiSecret) == 0 || len(accessToken) == 0 || len(accessTokenSecret) == 0 || len(searchString) == 0 {
 		log.Info("Please check the input parameters")
-		panic("Error Occured Due To Input Params")
+		panic("Please check the input parameters")
+		return errors.New("Please check the input parameters")
 	} else {
 
-		log.Info("")
+		//		log.Info("Twitter Started")
 
 		for _, handler := range t.handlers {
 
 			topic := handler.GetStringSetting("searchString")
-
+			log.Info("Message to search", topic)
 			//	t.RunHandler(handler, "test1")
 
 			anaconda.SetConsumerKey(apiKey)
 			anaconda.SetConsumerSecret(apiSecret)
-			api := anaconda.NewTwitterApi(consumerKey, consumerSecret)
-
+			api := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
+			log.Info("Stream Started")
 			stream := api.PublicStreamFilter(url.Values{
 				"track": []string{topic},
 			})
@@ -82,8 +87,8 @@ func (t *TwitterTrigger) Start() error {
 
 			for v := range stream.C {
 				twt, _ := v.(anaconda.Tweet)
-				log.Info("Received Tweet", twt.IdStr, twt.User.Name, twt.Text)
-				t.RunHandler(handler, twt.IdStr, twt.User.Name, twt.Text)
+				log.Info("Received Tweet", twt.IdStr, twt.User.ScreenName, twt.Text)
+				t.RunHandler(handler, twt.IdStr, twt.User.ScreenName, twt.Text)
 			}
 
 			// ticker := time.NewTicker(60 * time.Second)
