@@ -83,10 +83,10 @@ func (t *TwitterTrigger) Start() error {
 			log.Info("Stream Started")
 			if stream == "user" {
 
-				filter.Set("track", topic)
+				filter.Set("follow", topic)
 
 			} else {
-				filter.Set("follow", topic)
+				filter.Set("track", topic)
 			}
 
 			stream := api.PublicStreamFilter(filter)
