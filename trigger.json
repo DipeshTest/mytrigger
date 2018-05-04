@@ -9,19 +9,33 @@
   "settings":[
     {
       "name": "apiKey",
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     {
       "name": "apiSecret",
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     {
       "name": "accessToken",
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     {
       "name": "accessTokenSecret",
-      "type": "string"
+      "type": "string",
+      "required": true
+    },
+    {
+      "name": "stream",
+      "type": "string",
+      "allowed": [
+          "user",
+          "public"
+        ],
+  "value": "user",
+        "required": true
     }
 
   ],
@@ -43,7 +57,8 @@
     "settings": [
       {
         "name": "searchString",
-        "type": "string"
+        "type": "string",
+        "required": true
       }
     ]
   }

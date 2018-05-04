@@ -57,11 +57,12 @@ func (t *TwitterTrigger) Start() error {
 	apiSecret := strings.TrimSpace(t.config.GetSetting("apiSecret"))
 	accessToken := strings.TrimSpace(t.config.GetSetting("accessToken"))
 	accessTokenSecret := strings.TrimSpace(t.config.GetSetting("accessTokenSecret"))
+	stream := strings.TrimSpace(t.config.GetSetting("stream"))
 	searchString := strings.TrimSpace(t.handlers[0].GetStringSetting("searchString"))
 
 	//	log.Info("Twitter Started")
 
-	if len(apiKey) == 0 || len(apiSecret) == 0 || len(accessToken) == 0 || len(accessTokenSecret) == 0 || len(searchString) == 0 {
+	if len(apiKey) == 0 || len(apiSecret) == 0 || len(accessToken) == 0 || len(accessTokenSecret) == 0 || len(stream) == 0 || len(searchString) == 0 {
 		log.Info("Please check the input parameters")
 		panic("Please check the input parameters")
 		return errors.New("Please check the input parameters")
@@ -78,10 +79,17 @@ func (t *TwitterTrigger) Start() error {
 			anaconda.SetConsumerKey(apiKey)
 			anaconda.SetConsumerSecret(apiSecret)
 			api := anaconda.NewTwitterApi(accessToken, accessTokenSecret)
+			filter := url.Values{}
 			log.Info("Stream Started")
-			stream := api.PublicStreamFilter(url.Values{
-				"track": []string{topic},
-			})
+			if stream == "user" {
+
+				filter.Set("track", topic)
+
+			} else {
+				filter.Set("follow", topic)
+			}
+
+			stream := api.PublicStreamFilter(filter)
 
 			defer stream.Stop()
 
